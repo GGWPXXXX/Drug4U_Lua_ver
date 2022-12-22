@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lua",
+            "request": "launch",
+            "name": "Debug",
+            "program": "E:\\Drug4U_Lua_ver\\main.lua",
+            "workingDirectory": "E:\\Drug4U_Lua_ver",
+            "listenPublicly": false,
+            "listenPort": 56789
+        }
+    ]
+}
