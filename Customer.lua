@@ -27,25 +27,26 @@ function login()
 
     print("Your username?")
     local username = io.read()
-    while True do
-        print("True")
-        found = nil
-        for username_in_db in pairs(customer_data) do
-            if username_in_db == username then 
-              found = True
-            end
-        end
-    
-        if found then
-            break
-        end
-    
-        if found == False then
-            print("You're not in the system.")
-            print("Your username?")
-            username = io.read()
-        end
+    local user_list = {}
+
+    --- Check username if it's balnk or not.
+    while username == "" or username == " " do
+      print("Can't be blank.")
+      print("Your username?")
+      username = io.read()
     end
-end
+
+    for customer_in_db, y in pairs(customer_data) do
+      table.insert(user_list, customer_in_db)
+    end
+    
+    if pairs(customer_data)[username] then
+      print("You're on the system.")
+    else
+      print("You're not on the system.")
+    end
+
+  end
+
 
 login()
