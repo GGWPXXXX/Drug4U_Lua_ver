@@ -1,5 +1,11 @@
 local lunajson = require("lunajson")
 
+function Update(table, new_values)
+  for key, value in pairs(new_values) do
+    table[key] = value
+  end
+  return table
+end
 
 function Register()
 
@@ -11,10 +17,10 @@ function Register()
   local file, err = io.open("../Drug4U_Lua_ver/User_file/User_data.json", 'r')
   local data = file:read("*all")
   file:close()
-  local customer_db = lunajson.decode(data)
+  customer_db = lunajson.decode(data)
 
   print("What should we call you?")
-  local username = io.read()
+  username = io.read()
   --- Check username if it's balnk or not.
   while username == nil or username:match("%S") == nil  do
     print("Can't be blank.")
@@ -40,14 +46,14 @@ function Register()
   print(string.format('Hi %s Nice to meet ya :)', username))
   print('===============================')
   print("And your password?")
-  local password = io.read()
+  password = io.read()
   while password == nil or password:match("%S") == nil do
     print("Can't be blank.")
     print("And your password?")
     password = io.read()
   end
   print("Now the address for your shipping: ")
-  local address = io.read()
+  address = io.read()
   while address == nil or address:match("%S") == nil do
     print("Can't be blank.")
     print("Now the address for your shipping: ")
@@ -55,23 +61,25 @@ function Register()
   end
 
   print("Your telephone number please:) ")
-  local tel = io.read()
+  tel = io.read()
   while tel == nil or tel:match("%S") == nil do
     print("Can't be blank.")
     print("Your telephone number please:) ")
     tel = io.read()
   end
-  local new_acc = {
-   username = {
-    password =  password,
-    address = address,
-    tel = tel 
-   }
+  
+  new_acc = {
+      [username] = {
+      ["password"] =  password,
+      ["address"] = address,
+      ["tel"] = tel 
     }
-  local old_data = io.open("../Drug4U_Lua_ver/User_file/User_data.json", 'w')
-  local updated = lunajson.encode(new_acc, {indent = true})
-  old_data:write(updated)
-  old_data:close()
+  } 
+  local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", 'w')
+  
+  local new_db = lunajson.encode(Update(customer_db, new_acc), {indent = 4})
+  file:write(new_db)
+  file:close()
 end
 
 
