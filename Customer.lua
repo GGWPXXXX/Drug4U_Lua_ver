@@ -35,6 +35,8 @@ function Register()
         found = true
       end
     end
+
+    ---Check if the username has been used.
     if found == true then
       print("Sorry, this username has already been used.")
       print("What should we call you?")
@@ -68,16 +70,16 @@ function Register()
     print("Your telephone number please:) ")
     tel = io.read()
   end
-  
   new_acc = {
       [username] = {
       ["password"] =  password,
       ["address"] = address,
-      ["tel"] = tel 
+      ["tel"] = tonumber(tel) 
     }
-  } 
+  }
+
+  --- Write new data with updated old data.
   local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", 'w')
-  
   local new_db = json.encode(Update(customer_db, new_acc), {indent = true})
   file:write(new_db)
   file:close()
@@ -153,5 +155,29 @@ function Login()
 
 end
 
+function Menu()
+  print('---> Please select Menu :) <---')
+  print('==========================')
+  local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json")
+  data = file:read("*all")
+  file:close()
+  local med_data = lunajson.decode(data)
+  local count = 1
+  for menu_name, x in pairs(med_data)do
+    print(string.format("%s. %s", count, menu_name))
+    count = count + 1
+  end
+  print('==========================')
+  print(string.format("%s. Setting", count))
+  print(string.format("%s. Checkout", count+1))
+  print(string.format("%s. Exit", count+2))
 
-Register()
+  print('==========================')
+  print("Please input number:)")
+  local choice = tonumber(io.read())
+  print('==========================')
+
+  
+end
+
+Menu()
