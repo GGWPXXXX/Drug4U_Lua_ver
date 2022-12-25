@@ -177,7 +177,27 @@ function Menu()
   local choice = tonumber(io.read())
   print('==========================')
 
-  
+  local num_of_menu = {}
+  for menu_num = 1, count+2 do
+    table.insert(num_of_menu, menu_num)
+  end
+  --- Check if customer choice is correct or not.
+  local found = false
+  while true do      
+    for num in pairs(num_of_menu)do
+      if choice == num then
+        found = true
+        break
+      end
+    end
+    if found ==  true then 
+      return choice
+    else
+      print("Wrong choice :(")
+      print("Please input number:)")
+      choice = tonumber(io.read())
+    end
+  end
 end
 
 Menu()
