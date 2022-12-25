@@ -1,7 +1,7 @@
 local lunajson = require("lunajson")
 
 
-function register()
+function Register()
 
   print('===============================')
   print('Hi this is registration form :)')
@@ -16,7 +16,7 @@ function register()
   print("What should we call you?")
   local username = io.read()
   --- Check username if it's balnk or not.
-  while username == "" or username == " " do
+  while username == nil or username:match("%S") == nil  do
     print("Can't be blank.")
     print("Your username?")
     username = io.read()
@@ -36,18 +36,47 @@ function register()
       break
     end
   end
+  print('===============================')
+  print(string.format('Hi %s Nice to meet ya :)', username))
+  print('===============================')
   print("And your password?")
   local password = io.read()
-  while password == "" or password == " " do
+  while password == nil or password:match("%S") == nil do
     print("Can't be blank.")
     print("And your password?")
     password = io.read()
   end
+  print("Now the address for your shipping: ")
+  local address = io.read()
+  while address == nil or address:match("%S") == nil do
+    print("Can't be blank.")
+    print("Now the address for your shipping: ")
+    address = io.read()
+  end
+
+  print("Your telephone number please:) ")
+  local tel = io.read()
+  while tel == nil or tel:match("%S") == nil do
+    print("Can't be blank.")
+    print("Your telephone number please:) ")
+    tel = io.read()
+  end
+  local new_acc = {
+   username = {
+    password =  password,
+    address = address,
+    tel = tel 
+   }
+    }
+  local old_data = io.open("../Drug4U_Lua_ver/User_file/User_data.json", 'w')
+  local updated = lunajson.encode(new_acc, {indent = true})
+  old_data:write(updated)
+  old_data:close()
 end
 
 
 
-function login()
+function Login()
 
   print('============================')
   print('Hi welcome to login page')
@@ -76,7 +105,7 @@ function login()
   local username = io.read()
 
   --- Check username if it's balnk or not.
-  while username == "" or username == " " do
+  while username == nil or username:match("%S") == nil do
     print("Can't be blank.")
     print("Your username?")
     username = io.read()
@@ -116,5 +145,4 @@ function login()
 end
 
 
-
-register()
+Register()
