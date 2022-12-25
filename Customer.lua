@@ -1,6 +1,54 @@
 local lunajson = require("lunajson")
 
+
+function register()
+
+  print('===============================')
+  print('Hi this is registration form :)')
+  print('===============================')
+
+  --- Read customer data.
+  local file, err = io.open("../Drug4U_Lua_ver/User_file/User_data.json", 'r')
+  local data = file:read("*all")
+  file:close()
+  local customer_db = lunajson.decode(data)
+
+  print("What should we call you?")
+  local username = io.read()
+  --- Check username if it's balnk or not.
+  while username == "" or username == " " do
+    print("Can't be blank.")
+    print("Your username?")
+    username = io.read()
+  end
+  while true do
+    local found = false
+    for customer_username_db, y in pairs(customer_db) do
+      if username == customer_username_db then
+        found = true
+      end
+    end
+    if found == true then
+      print("Sorry, this username has already been used.")
+      print("What should we call you?")
+      username = io.read()
+    else
+      break
+    end
+  end
+  print("And your password?")
+  local password = io.read()
+  while password == "" or password == " " do
+    print("Can't be blank.")
+    print("And your password?")
+    password = io.read()
+  end
+end
+
+
+
 function login()
+
   print('============================')
   print('Hi welcome to login page')
   print('Please type in your username and password :)')
@@ -69,4 +117,4 @@ end
 
 
 
-login()
+register()
