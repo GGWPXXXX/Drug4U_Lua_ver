@@ -1,4 +1,5 @@
 local lunajson = require("lunajson")
+local json = require ("dkjson")
 
 function Update(table, new_values)
   for key, value in pairs(new_values) do
@@ -77,7 +78,7 @@ function Register()
   } 
   local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", 'w')
   
-  local new_db = lunajson.encode(Update(customer_db, new_acc), {indent = 4})
+  local new_db = json.encode(Update(customer_db, new_acc), {indent = true})
   file:write(new_db)
   file:close()
 end
