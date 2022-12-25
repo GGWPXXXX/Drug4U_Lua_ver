@@ -74,7 +74,7 @@ function Register()
       [username] = {
       ["password"] =  password,
       ["address"] = address,
-      ["tel"] = tonumber(tel) 
+      ["tel"] = tel 
     }
   }
 
@@ -199,5 +199,8 @@ function Menu()
     end
   end
 end
+function Setting ()
 
-Menu()
+
+end
+Setting()
