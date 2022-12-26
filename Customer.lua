@@ -156,9 +156,10 @@ function Login()
 end
 
 function Menu()
+  
   print('---> Please select Menu :) <---')
   print('==========================')
-  local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json")
+  local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", "r")
   data = file:read("*all")
   file:close()
   local med_data = lunajson.decode(data)
@@ -198,8 +199,9 @@ function Menu()
       choice = tonumber(io.read())
     end
   end
-end 
-function Setting ()
+end
+
+function Setting (user_name)
   local menu = {
     ["1"] =  "Password",
     ["2"] = "Address", 
@@ -230,9 +232,73 @@ function Setting ()
       break
     end
   end
-  
 
+  if string.lower(chose_choice) == "password" then goto password
+  elseif string.lower(chose_choice) == "address" then goto address
+  elseif string.lower(chose_choice) == "telephone number"  then goto telephone_number
+  end
+
+  ::password:: do
+    print("--- Password ---")
+    print("Change it to?")
+    local new_password = io.read()
+    local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "r")
+    local data = file:read("*all")
+    file:close()
+    local old_data = lunajson.decode(data)
+    local new_form = {
+      [user_name] = {
+        ["address"] = old_data[user_name]["address"],
+        ["tel"] = old_data[user_name]["tel"],
+        ["password"] = new_password
+      }
+    }
+    local write_file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "w")
+    local new_data = json.encode(Update(old_data, new_form), {indent = true})
+    write_file:write(new_data)
+    write_file:close()
+  end
+
+  ::address:: do
+    print("--- Address ---")
+    print("Change it to?")
+    local new_address = io.read()
+    local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "r")
+    local data = file:read("*all")
+    file:close()
+    local old_data = lunajson.decode(data)
+    local new_form = {
+      [user_name] = {
+        ["address"] = new_address,
+        ["tel"] = old_data[user_name]["tel"],
+        ["password"] = old_data[user_name]["password"]
+      }
+    }
+    local write_file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "w")
+    local new_data = json.encode(Update(old_data, new_form), {indent = true})
+    write_file:write(new_data)
+    write_file:close()
+  end
+
+::telephone_number:: do
+  print("--- Telephone Number ---")
+  print("Change it to?")
+  local new_tel = io.read()
+  local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "r")
+  local data = file:read("*all")
+  file:close()
+  local old_data = lunajson.decode(data)
+  local new_form = {
+    [user_name] = {
+      ["address"] = old_data[user_name]["address"],
+      ["tel"] = new_tel,
+      ["password"] = old_data[user_name]["password"]
+    }
+  }
+  local write_file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "w")
+  local new_data = json.encode(Update(old_data, new_form), {indent = true})
+  write_file:write(new_data)
+  write_file:close()
 end
 
-
-Setting()
+end
