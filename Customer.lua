@@ -198,23 +198,38 @@ function Menu()
       choice = tonumber(io.read())
     end
   end
-end
+end 
 function Setting ()
+  local menu = {
+    ["1"] =  "Password",
+    ["2"] = "Address", 
+    ["3"] = "Telephone number"
+    }
+
   print('==============================')
   print('What would you like to change?')
   print('==============================')
-  print('1.Password')
-  print('2.Address')
-  print('3.Telephone number')
-  print('Please type in menu number :) ')
-  local chose_choice = io.read()
-  while chose_choice ~= '1' and chose_choice ~= '2' and 
-  chose_choice ~= '3'do
-    print('Wrong choice!!')
-    print('Please type in menu number :) ')
-    chose_choice = io.read()
+  for num, menu_name in pairs(menu) do
+    print(string.format("--- %s", menu[num]))
   end
-
+  print('Please type in menu name :) ')
+  local chose_choice = io.read()
+  local found = false
+  while true do
+    for menu_num, menu_name in pairs(menu) do
+      if string.lower(chose_choice) == string.lower(menu_name) then
+        found = true
+        break
+      end
+    end
+    if found == false then 
+      print('Wrong choice!!')
+      print('Please type in menu name :( ')
+      chose_choice = io.read()
+    else
+      break
+    end
+  end
   
 
 end
