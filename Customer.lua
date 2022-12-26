@@ -202,46 +202,106 @@ function Menu()
 end
 
 function Setting (user_name)
-  local menu = {
-    ["1"] =  "Password",
-    ["2"] = "Address", 
-    ["3"] = "Telephone number"
-    }
+  ::main:: do
+    local menu = {
+      ["1"] =  "Password",
+      ["2"] = "Address", 
+      ["3"] = "Telephone number"
+      }
 
-  print('==============================')
-  print('What would you like to change?')
-  print('==============================')
-  for num, menu_name in pairs(menu) do
-    print(string.format("--- %s", menu[num]))
-  end
-  print('Please type in menu name :) ')
-  local chose_choice = io.read()
-  local found = false
-  while true do
-    for menu_num, menu_name in pairs(menu) do
-      if string.lower(chose_choice) == string.lower(menu_name) then
-        found = true
+    print('==============================')
+    print('What would you like to change?')
+    print('==============================')
+    for num, menu_name in pairs(menu) do
+      print(string.format("--- %s", menu[num]))
+    end
+    print('Please type in menu name :) ')
+    local chose_choice = io.read()
+    local found = false
+    while true do
+      for menu_num, menu_name in pairs(menu) do
+        if string.lower(chose_choice) == string.lower(menu_name) then
+          found = true
+          break
+        end
+      end
+      if found == false then 
+        print('Wrong choice!!')
+        print('Please type in menu name :( ')
+        chose_choice = io.read()
+      else
         break
       end
     end
-    if found == false then 
-      print('Wrong choice!!')
-      print('Please type in menu name :( ')
-      chose_choice = io.read()
-    else
-      break
+
+    if string.lower(chose_choice) == "password" then goto password
+    elseif string.lower(chose_choice) == "address" then goto address
+    elseif string.lower(chose_choice) == "telephone number"  then goto telephone_number
     end
-  end
 
-  if string.lower(chose_choice) == "password" then goto password
-  elseif string.lower(chose_choice) == "address" then goto address
-  elseif string.lower(chose_choice) == "telephone number"  then goto telephone_number
-  end
+    ::password:: do
+      print("--- Password ---")
+      print("Change it to?")
+      local new_password = io.read()
+      while new_password == nil or new_password:match("%S") == nil do
+        print("Can't be blank !")
+        print("Change it to?")
+        new_password = io.read()
+      end
+      local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "r")
+      local data = file:read("*all")
+      file:close()
+      local old_data = lunajson.decode(data)
+      local new_form = {
+        [user_name] = {
+          ["address"] = old_data[user_name]["address"],
+          ["tel"] = old_data[user_name]["tel"],
+          ["password"] = new_password
+        }
+      }
+      local write_file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "w")
+      local new_data = json.encode(Update(old_data, new_form), {indent = true})
+      write_file:write(new_data)
+      write_file:close()
+      goto ask
+    end
 
-  ::password:: do
-    print("--- Password ---")
+    ::address:: do
+      print("--- Address ---")
+      print("Change it to?")
+      local new_address = io.read()
+      while new_address == nil or new_address:match("%S") == nil do
+        print("Can't be blank !")
+        print("Change it to?")
+        new_address = io.read()
+      end
+      local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "r")
+      local data = file:read("*all")
+      file:close()
+      local old_data = lunajson.decode(data)
+      local new_form = {
+        [user_name] = {
+          ["address"] = new_address,
+          ["tel"] = old_data[user_name]["tel"],
+          ["password"] = old_data[user_name]["password"]
+        }
+      }
+      local write_file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "w")
+      local new_data = json.encode(Update(old_data, new_form), {indent = true})
+      write_file:write(new_data)
+      write_file:close()
+      goto ask
+    end
+
+  ::telephone_number:: do
+    print("--- Telephone Number ---")
     print("Change it to?")
-    local new_password = io.read()
+    local new_tel = io.read()
+    while new_tel == nil or new_tel:match("%S") == nil do
+      print("Can't be blank !")
+      print("Change it to?")
+      new_tel = io.read()
+    end
     local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "r")
     local data = file:read("*all")
     file:close()
@@ -249,28 +309,7 @@ function Setting (user_name)
     local new_form = {
       [user_name] = {
         ["address"] = old_data[user_name]["address"],
-        ["tel"] = old_data[user_name]["tel"],
-        ["password"] = new_password
-      }
-    }
-    local write_file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "w")
-    local new_data = json.encode(Update(old_data, new_form), {indent = true})
-    write_file:write(new_data)
-    write_file:close()
-  end
-
-  ::address:: do
-    print("--- Address ---")
-    print("Change it to?")
-    local new_address = io.read()
-    local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "r")
-    local data = file:read("*all")
-    file:close()
-    local old_data = lunajson.decode(data)
-    local new_form = {
-      [user_name] = {
-        ["address"] = new_address,
-        ["tel"] = old_data[user_name]["tel"],
+        ["tel"] = new_tel,
         ["password"] = old_data[user_name]["password"]
       }
     }
@@ -278,27 +317,31 @@ function Setting (user_name)
     local new_data = json.encode(Update(old_data, new_form), {indent = true})
     write_file:write(new_data)
     write_file:close()
+    goto ask
   end
+end
+::ask:: do
+  print("Do you want to change anything else?")
+  print("Type (y/n)")
+  local more = io.read()
 
-::telephone_number:: do
-  print("--- Telephone Number ---")
-  print("Change it to?")
-  local new_tel = io.read()
-  local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "r")
-  local data = file:read("*all")
-  file:close()
-  local old_data = lunajson.decode(data)
-  local new_form = {
-    [user_name] = {
-      ["address"] = old_data[user_name]["address"],
-      ["tel"] = new_tel,
-      ["password"] = old_data[user_name]["password"]
-    }
-  }
-  local write_file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", "w")
-  local new_data = json.encode(Update(old_data, new_form), {indent = true})
-  write_file:write(new_data)
-  write_file:close()
+  while string.lower(more) ~= 'y' and
+  string.lower(more) ~= 'n' do
+    print("Wrong choice!!")
+    print("Type (y/n)")
+    more = io.read()
+  end
+  
+  
+  if string.lower(more) == "y" then
+    goto main
+  end
+  
+end
 end
 
+function Add_to_cart ()
+  
 end
+
+Setting("a123")
