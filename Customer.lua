@@ -200,7 +200,24 @@ function Menu()
   end
 end
 function Setting ()
+  print('==============================')
+  print('What would you like to change?')
+  print('==============================')
+  print('1.Password')
+  print('2.Address')
+  print('3.Telephone number')
+  print('Please type in menu number :) ')
+  local chose_choice = io.read()
+  while chose_choice ~= '1' and chose_choice ~= '2' and 
+  chose_choice ~= '3'do
+    print('Wrong choice!!')
+    print('Please type in menu number :) ')
+    chose_choice = io.read()
+  end
 
+  
 
 end
+
+
 Setting()
