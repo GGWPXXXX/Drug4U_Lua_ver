@@ -340,8 +340,30 @@ end
 end
 end
 
-function Add_to_cart ()
-  
+function Add_to_cart (user_name, med_name, med_amount, price)
+  local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'r')
+  local data = file:read("*all")
+  file:close()
+  local cart_data = lunajson.decode(data)
+  if not cart_data[user_name] then
+    local new_customer_new_order = {
+      [user_name] = {
+          [1] = {med_name, med_amount, price}
+      }
+    }
+    Update(cart_data, new_customer_new_order)
+  else
+    local old_customer_new_order = {
+      [math.max(cart_data[user_name])+1]  = {
+        {med_name, med_amount, price}
+      }
+    }
+    Update(customer_db[user_name], old_customer_new_order)
+  end
+  local cart_data_for_write = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
+  local new_data = json.encode(customer_db, {indent = true})
+  cart_data_for_write:write(new_data)
+  cart_data_for_write:close()
 end
 
-Setting("a123")
+Add_to_cart("a123", "Tylenol", 5, 100)
