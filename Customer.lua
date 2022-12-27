@@ -348,22 +348,33 @@ function Add_to_cart (user_name, med_name, med_amount, price)
   if not cart_data[user_name] then
     local new_customer_new_order = {
       [user_name] = {
-          [1] = {med_name, med_amount, price}
+          ["1"] = {med_name, med_amount, price}
       }
     }
-    Update(cart_data, new_customer_new_order)
+
+    local cart_data_for_write = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
+    local new_data = json.encode(Update(cart_data, new_customer_new_order), {indent = true})
+    cart_data_for_write:write(new_data)
+    cart_data_for_write:close()
   else
+    local num = 0
+    for k, v in pairs(cart_data[user_name]) do
+      num = 0
+      num = num + k
+    end
+    num = num + 1
     local old_customer_new_order = {
-      [math.max(cart_data[user_name])+1]  = {
+      [user_name] = {
+      [tostring(num)]  = {
         {med_name, med_amount, price}
       }
     }
-    Update(customer_db[user_name], old_customer_new_order)
+  }
+    local cart_data_for_write = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
+    new_data = json.encode(Update(cart_data[user_name], old_customer_new_order), {indent = true})
+    cart_data_for_write:write(new_data)
+    cart_data_for_write:close()
   end
-  local cart_data_for_write = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
-  local new_data = json.encode(customer_db, {indent = true})
-  cart_data_for_write:write(new_data)
-  cart_data_for_write:close()
 end
 
-Add_to_cart("a123", "Tylenol", 5, 100)
+Add_to_cart("GG_WPX", "Tylenol", 5, 100)
