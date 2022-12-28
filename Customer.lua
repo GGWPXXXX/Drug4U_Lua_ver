@@ -390,7 +390,7 @@ function Check_out(user_name)
   
   -- If this is the user's first order, create a new entry in the orders data
   if not order_data[user_name] then
-    local order_list = {}
+    order_list = {}
     for num, med_list in pairs(cart_data[user_name]) do
       table.insert(order_list, {med_list[1], med_list[2], med_list[3]})
     end
@@ -400,7 +400,7 @@ function Check_out(user_name)
   else
     -- If the user has placed previous orders, find the highest order number and create a new order with the next highest number
     local highest_order_num = 0
-    local order_list = {}
+    order_list = {}
     for num, med_list in pairs(cart_data[user_name]) do
       table.insert(order_list, {med_list[1], med_list[2], med_list[3]})
     end
@@ -417,6 +417,27 @@ function Check_out(user_name)
   local new_data = json.encode(order_data, {indent = true})
   orders_data_for_write:write(new_data)
   orders_data_for_write:close()
+  
+  local total_price = 0
+  print('=================================')
+  print("You're order(s) are the following :)")
+  print('=================================')
+  for count, items in pairs(order_list) do
+    print(string.format("%s. %s x %s  %s Baht.", count, items[1], items[2], items[3]))
+    total_price = total_price + items[3]
+  end
+  print(string.format("Your total is %s Baht.", total_price ))
+  local count = 1
+  for num, y in pairs(cart_data)do
+    if num == user_name then break else count = count +  1
+    end
+  end
+  print(cart_data[1])
+  cart_data = table.remove(cart_data, count)
+  local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
+  local write_file = json.encode(cart_data, {indent=true})
+  file:write(write_file)
+  file:close()
 end
 
 
