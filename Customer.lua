@@ -366,5 +366,9 @@ function Add_to_cart (user_name, med_name, med_amount, price)
   local new_data = json.encode(cart_data, {indent = true})
   cart_data_for_write:write(new_data)
   cart_data_for_write:close()
+print(string.format("%s was added to your cart :)", med_name))
 end
 
+function Check_out()
+  local file = io.open("../Drug4U_Lua_ver/Admin_file/Orders.json", 'r')
+end
