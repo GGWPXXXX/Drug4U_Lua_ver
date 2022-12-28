@@ -369,6 +369,52 @@ function Add_to_cart (user_name, med_name, med_amount, price)
 print(string.format("%s was added to your cart :)", med_name))
 end
 
-function Check_out()
+function Check_out(user_name)
+
+  --- Open all necessary file.
   local file = io.open("../Drug4U_Lua_ver/Admin_file/Orders.json", 'r')
+  local data = file:read("*all")
+  local order_data = lunajson.decode(data)
+  file:close()
+  local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'r')
+  local data = file:read("*all")
+  local cart_data = lunajson.decode(data)
+  file:close()
+
+  --- If there's nothing in that user_name cart it will print this message.
+  if not cart_data[user_name] then
+    print("===============================")
+    print("There's nothing in your cart :)")
+    print("===============================")
+  
+  else
+    if not order_data[user_name] then
+      local order_list = {}
+      for num, med_list in pairs(cart_data[user_name]) do
+        table.insert(order_list, {med_list[1], med_list[2], med_list[3]})
+      end
+      order_data[user_name] = {
+        ["1"] = {order_list}
+    }
+
+    else
+      local highest_order_num = 0
+      local order_list = {}
+      for num, med_list in pairs(cart_data[user_name]) do
+        table.insert(order_list, {med_list[1], med_list[2], med_list[3]})
+      end
+      for order_num, _ in pairs(cart_data[user_name]) do
+        highest_order_num = math.max(highest_order_num, tonumber(order_num))
+      end
+      -- Add new order to cart data
+      local new_order_num = highest_order_num + 1
+      cart_data[user_name][new_order_num] = {order_list}
+    end
+    local cart_data_for_write = io.open("../Drug4U_Lua_ver/Admin_file/Orders.json", 'w')
+    local new_data = json.encode(cart_data, {indent = true})
+    cart_data_for_write:write(new_data)
+    cart_data_for_write:close()
+  end
 end
+
+Check_out("a123")
