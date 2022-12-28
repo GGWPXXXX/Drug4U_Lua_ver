@@ -339,42 +339,32 @@ end
   
 end
 end
-
 function Add_to_cart (user_name, med_name, med_amount, price)
   local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'r')
   local data = file:read("*all")
   file:close()
   local cart_data = lunajson.decode(data)
-  if not cart_data[user_name] then
-    local new_customer_new_order = {
-      [user_name] = {
-          ["1"] = {med_name, med_amount, price}
-      }
-    }
 
-    local cart_data_for_write = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
-    local new_data = json.encode(Update(cart_data, new_customer_new_order), {indent = true})
-    cart_data_for_write:write(new_data)
-    cart_data_for_write:close()
-  else
-    local num = 0
-    for k, v in pairs(cart_data[user_name]) do
-      num = 0
-      num = num + k
-    end
-    num = num + 1
-    local old_customer_new_order = {
-      [user_name] = {
-      [tostring(num)]  = {
-        {med_name, med_amount, price}
-      }
+  if not cart_data[user_name] then
+    -- Add new user and new order to cart data
+    cart_data[user_name] = {
+        ["1"] = {med_name, med_amount, price}
     }
-  }
-    local cart_data_for_write = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
-    new_data = json.encode(Update(cart_data[user_name], old_customer_new_order), {indent = true})
-    cart_data_for_write:write(new_data)
-    cart_data_for_write:close()
+  else
+    -- Find highest order number for existing user
+    local highest_order_num = 0
+    for order_num, _ in pairs(cart_data[user_name]) do
+      highest_order_num = math.max(highest_order_num, tonumber(order_num))
+    end
+    -- Add new order to cart data
+    local new_order_num = highest_order_num + 1
+    cart_data[user_name][new_order_num] = {med_name, med_amount, price}
   end
+
+  -- Write updated cart data to JSON file
+  local cart_data_for_write = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
+  local new_data = json.encode(cart_data, {indent = true})
+  cart_data_for_write:write(new_data)
+  cart_data_for_write:close()
 end
 
-Add_to_cart("GG_WPX", "Tylenol", 5, 100)
