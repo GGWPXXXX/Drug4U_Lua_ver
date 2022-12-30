@@ -1,6 +1,11 @@
 {
   "GG_WPX":{
+    "0":["123","0943483861","38/18 Soi 2/2 Trang"],
     "1":[["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100]],
-    "0":["0943483861","123","38/18 Soi 2/2 Trang"]
+    "2":[["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100]],
+    "3":[["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100]],
+    "4":[["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100]],
+    "5":[["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100]],
+    "6":[["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100],["Tylenol",5,100]]
   }
 }

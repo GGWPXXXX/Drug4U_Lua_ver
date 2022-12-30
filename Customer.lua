@@ -170,8 +170,9 @@ function Menu()
   end
   print('==========================')
   print(string.format("%s. Setting", count))
-  print(string.format("%s. Checkout", count+1))
-  print(string.format("%s. Exit", count+2))
+  print(string.format("%s. Manage Cart", count +1))
+  print(string.format("%s. Checkout", count+2))
+  print(string.format("%s. Exit", count+3))
 
   print('==========================')
   print("Please input number:)")
@@ -179,7 +180,7 @@ function Menu()
   print('==========================')
 
   local num_of_menu = {}
-  for menu_num = 1, count+2 do
+  for menu_num = 1, count+3 do
     table.insert(num_of_menu, menu_num)
   end
   --- Check if customer choice is correct or not.
@@ -201,6 +202,18 @@ function Menu()
   end
 end
 
+function Manage_cart(user_name)
+  local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'r')
+  local data = file:open("*all")
+  file:close()
+  local cart_db = lunajson.decode(data)
+  
+  --- If customer did'nt have anything in cart database then.
+  if not cart_db[user_name] then
+    print("There's nothing to be Manage cause your cart is empty!")
+
+  end
+end
 function Setting (user_name)
   ::main:: do
     local menu = {
@@ -396,9 +409,11 @@ function Check_out(user_name)
   if not order_data[user_name] then
     order_list = {}
     customer_info = {}
+    --- Add customer's order into list.
     for num, med_list in pairs(cart_data[user_name]) do
       table.insert(order_list, {med_list[1], med_list[2], med_list[3]})
     end
+    --- Add customer's infomation ie.address, telephone_number into list.
     for key, info in pairs(customer_data[user_name]) do
       table.insert(customer_info, info)
     end
@@ -417,11 +432,12 @@ function Check_out(user_name)
       highest_order_num = math.max(highest_order_num, tonumber(order_num))
     end
     local new_order_num = highest_order_num + 1
-    new_order_num = tostring(new_order_num) -- Convert the order number to a string to match the format of the other keys in the orders data
+    --- Convert highest number into string.
+    new_order_num = tostring(new_order_num)
     order_data[user_name][new_order_num] = order_list
   end
   
-  -- Write the updated orders data to the orders file
+  -- Write the updated orders data to the orders file.
   local orders_data_for_write = io.open("../Drug4U_Lua_ver/Admin_file/Orders.json", 'w')
   local new_data = json.encode(order_data, {indent = true})
   orders_data_for_write:write(new_data)
@@ -432,9 +448,11 @@ function Check_out(user_name)
   print("You're order(s) are the following :)")
   print('=================================')
   for count, items in pairs(order_list) do
-    print(string.format("%s. %s x %s  %s Baht.", count, items[1], items[2], items[3]))
-    total_price = total_price + items[3]
+    print(string.format("%s. %s x %s  %s x %s = %s Baht.", count, items[1], items[2]
+    , items[2], items[3], items[2] * items[3]))
+    total_price = total_price + (items[2] * items[3])
   end
+  print('=================================')
   print(string.format("Your total is %s Baht.", total_price ))
   ---  Delete order that ordered from the cart database.
   cart_data[user_name] = nil
