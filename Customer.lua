@@ -379,6 +379,10 @@ function Check_out(user_name)
   local data = file:read("*all")
   local cart_data = lunajson.decode(data)
   file:close()
+  local file = io.open("../Drug4U_Lua_ver/User_file/User_data.json", 'r')
+  data = file:read("*all")
+  file:close()
+  local customer_data = lunajson.decode(data)
   
   -- If there's nothing in the user's cart, print a message and return
   if not cart_data[user_name] then
@@ -391,10 +395,15 @@ function Check_out(user_name)
   -- If this is the user's first order, create a new entry in the orders data
   if not order_data[user_name] then
     order_list = {}
+    customer_info = {}
     for num, med_list in pairs(cart_data[user_name]) do
       table.insert(order_list, {med_list[1], med_list[2], med_list[3]})
     end
+    for key, info in pairs(customer_data[user_name]) do
+      table.insert(customer_info, info)
+    end
     order_data[user_name] = {
+      ["0"] = customer_info,
       ["1"] = order_list
     }
   else
@@ -427,13 +436,9 @@ function Check_out(user_name)
     total_price = total_price + items[3]
   end
   print(string.format("Your total is %s Baht.", total_price ))
-  local count = 1
-  for num, y in pairs(cart_data)do
-    if num == user_name then break else count = count +  1
-    end
-  end
-  print(cart_data[1])
-  cart_data = table.remove(cart_data, count)
+  ---  Delete order that ordered from the cart database.
+  cart_data[user_name] = nil
+  --- Write down new data
   local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
   local write_file = json.encode(cart_data, {indent=true})
   file:write(write_file)
