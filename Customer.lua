@@ -1,5 +1,6 @@
 local lunajson = require("lunajson")
 local json = require ("dkjson")
+local time = require("socket")
 
 function Update(table, new_values)
   for key, value in pairs(new_values) do
@@ -204,14 +205,45 @@ end
 
 function Manage_cart(user_name)
   local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'r')
-  local data = file:open("*all")
+  local data = file:read("*all")
   file:close()
   local cart_db = lunajson.decode(data)
   
-  --- If customer did'nt have anything in cart database then.
+  --- If customer didn't have anything in cart database then.
   if not cart_db[user_name] then
+    print("======================================================")
     print("There's nothing to be Manage cause your cart is empty!")
+    print("======================================================")
+    for count = 5, 1, -1 do
+      print(string.format("We'll take you back in main menu in %s", count))
+      time.sleep(1)
+    end
+    return
 
+  else
+    local menu_num_list = {}
+    local count = 1
+    for k, v in pairs(cart_db[user_name]) do
+      print(count, v[1], v[2], v[3])
+      table.insert(menu_num_list, count)
+      count = count + 1
+    end
+
+    ::ask_menu::
+    print('=====================================')
+    print("Which order do you want to customize?")
+    print('=====================================')
+    local choice = io.read()
+    local found = nil
+
+    --- Check that customer input is correct or not.
+    for num in pairs(menu_num_list)do
+      if tonumber(choice) == num then found = true break else found = false
+      end
+    end
+    if found == false then print("Wrong choice!") goto ask_menu
+    end
+    
   end
 end
 function Setting (user_name)
@@ -464,4 +496,4 @@ function Check_out(user_name)
 end
 
 
-Check_out("GG_WPX")
+Manage_cart("a123")
