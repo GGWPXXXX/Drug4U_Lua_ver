@@ -208,6 +208,10 @@ function Manage_cart(user_name)
   local data = file:read("*all")
   file:close()
   local cart_db = lunajson.decode(data)
+  local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'r')
+  local data = file:read("*all")
+  local med_db = lunajson.decode(data)
+  file:close()
   
   --- If customer didn't have anything in cart database then.
   if not cart_db[user_name] then
@@ -221,19 +225,20 @@ function Manage_cart(user_name)
     return
 
   else
+    local name_med_dict = {}
     local count = 1
     for k, v in pairs(cart_db[user_name]) do
       print(count, v[1], v[2], v[3])
+      name_med_dict[tostring(count)] = v[1]
       count = count + 1
     end
-
     ::ask_menu::
     print('=====================================')
     print("Which order do you want to customize?")
     print('=====================================')
     local choice = io.read()
     local found = nil
-
+    
     --- Check that customer input is correct or not.
     for num in pairs(cart_db[user_name])do
       if tonumber(choice) == tonumber(num) then found = true break else found = false
@@ -241,7 +246,7 @@ function Manage_cart(user_name)
     end
     if found == false then print("Wrong choice!") goto ask_menu
     end
-    ::ask_to_do::
+    ::main::
     print("=======================")
     print("What do you want to do?")
     print("=======================")
@@ -250,7 +255,7 @@ function Manage_cart(user_name)
     print("=======================")
     print("Please type in menu number :)")
     local to_do = io.read()
-    if to_do ~= '1' and to_do ~= '2' then print("Wrong choice!") time.sleep(1) goto ask_to_do
+    if to_do ~= '1' and to_do ~= '2' then print("Wrong choice!") time.sleep(1) goto main
     end
     if to_do == '1' then goto delete_items
     elseif to_do == '2' then goto change_quantity
@@ -267,11 +272,25 @@ function Manage_cart(user_name)
       print("Change it to?")
       local change_qn_to = io.read()
       if tonumber(change_qn_to) < 0 then print("Can't less then zero!") goto change_quantity
-      elseif tonumber(change_qn_to) <= cart_db[user_name][tostring(choice)][2] then 
-        print("Can't less than or equal to the original quantity.") 
+      elseif tonumber(change_qn_to) == cart_db[user_name][tostring(choice)][2] then
+        print("Can't change to equal to the original quantity!") 
         goto change_quantity
-        
       end
+      for k, v_table in pairs(med_db) do 
+        for name, info in pairs(v_table)do
+          if name == name_med_dict[tostring(choice)] then
+            if tonumber(change_qn_to) > info["amount"] then print("Unfortunately, the quantity of this medication is insufficient.") goto change_quantity
+            end
+          end
+        end
+      end
+      cart_db[user_name][tostring(choice)][2] = tonumber(change_qn_to)
+      local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
+      local data = json.encode(cart_db, {indent=true})
+      file:write(data)
+      file:close()
+      print("Changed successfully.")
+      
     end
   end
 end

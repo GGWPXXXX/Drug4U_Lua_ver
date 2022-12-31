@@ -1,12 +1,12 @@
 {
   "a123":{
-    "1":["Tylenol",5,100],
-    "2":["Tylenol",5,100]
-  },
-  "GG_WPX":{
-    "4":["Tylenol",5,100],
-    "3":["Tylenol",5,100],
     "2":["Tylenol",5,100],
     "1":["Tylenol",5,100]
+  },
+  "GG_WPX":{
+    "2":["1.Calamine lotion 120ml ",5,100],
+    "3":["1.Calamine lotion 120ml ",5,100],
+    "4":["1.Calamine lotion 120ml ",10,100],
+    "1":["1.Calamine lotion 120ml ",1,100]
   }
 }
