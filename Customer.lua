@@ -437,6 +437,10 @@ function Add_to_cart (user_name, med_name, med_amount, price)
   local data = file:read("*all")
   file:close()
   local cart_data = lunajson.decode(data)
+  local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'r')
+  local data = file:read("*all")
+  local med_db = lunajson.decode(data)
+  file:close()
 
   if not cart_data[user_name] then
     -- Add new user and new order to cart data
@@ -459,7 +463,20 @@ function Add_to_cart (user_name, med_name, med_amount, price)
   local new_data = json.encode(cart_data, {indent = true})
   cart_data_for_write:write(new_data)
   cart_data_for_write:close()
-print(string.format("%s was added to your cart :)", med_name))
+  print(string.format("%s was added to your cart :)", med_name))
+
+  -- Delete amount of medecine that customer buy in stock.
+  for cate, med_table in pairs(med_db) do
+    for name, info in pairs(med_table)do
+      if name == med_name then med_db[cate][name]["amount"] = med_db[cate][name]["amount"] - med_amount
+      end
+    end
+  end
+  -- Write down new data.
+  local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'w')
+  local data = json.encode(med_db, {indent=true})
+  file:write(data)
+  file:close()
 end
 
 function Check_out(user_name)
@@ -542,6 +559,3 @@ function Check_out(user_name)
   file:write(write_file)
   file:close()
 end
-
-
-Manage_cart("GG_WPX")
