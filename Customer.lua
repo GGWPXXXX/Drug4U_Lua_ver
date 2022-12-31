@@ -151,9 +151,12 @@ function Login()
     print("Sorry, your given password does not match with the username, Please try again.")
     print("Your password?")
     password = io.read()
-  return username
   end
-
+  for num = 5, 1, -1 do
+    print(string.format("We'll take you back in main menu in %s"), num)
+    time.sleep(1)
+  end
+  return username
 end
 
 function Menu()
