@@ -30,4 +30,19 @@ function Add_new_category ()
 
 end
 
-Add_new_category()
+function Add_new_product()
+     --- This method allow admin to add new product to the specific category.
+    ::main:: do
+        local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'r')
+        local data = file:read("*all")
+        local med_db = json.
+        print('===============================')
+        print("All categories are the following :)")
+
+        print('===============================')
+        print("Which category do you want to add new medicines to?")
+        print("Please type in name of the category.")
+
+    end
+end
+Add_new_product()
