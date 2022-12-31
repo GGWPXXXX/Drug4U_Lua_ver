@@ -221,11 +221,9 @@ function Manage_cart(user_name)
     return
 
   else
-    local menu_num_list = {}
     local count = 1
     for k, v in pairs(cart_db[user_name]) do
       print(count, v[1], v[2], v[3])
-      table.insert(menu_num_list, count)
       count = count + 1
     end
 
@@ -237,13 +235,44 @@ function Manage_cart(user_name)
     local found = nil
 
     --- Check that customer input is correct or not.
-    for num in pairs(menu_num_list)do
-      if tonumber(choice) == num then found = true break else found = false
+    for num in pairs(cart_db[user_name])do
+      if tonumber(choice) == tonumber(num) then found = true break else found = false
       end
     end
     if found == false then print("Wrong choice!") goto ask_menu
     end
-    
+    ::ask_to_do::
+    print("=======================")
+    print("What do you want to do?")
+    print("=======================")
+    print("1.Delete this order?")
+    print("2.Change the quantity you purchase?")
+    print("=======================")
+    print("Please type in menu number :)")
+    local to_do = io.read()
+    if to_do ~= '1' and to_do ~= '2' then print("Wrong choice!") time.sleep(1) goto ask_to_do
+    end
+    if to_do == '1' then goto delete_items
+    elseif to_do == '2' then goto change_quantity
+    end
+    ::delete_items:: do
+      cart_db[user_name][choice] = nil
+      local file = io.open("../Drug4U_Lua_ver/User_file/Cart.json", 'w')
+      local data = json.encode(cart_db, {indent=true})
+      file:write(data)
+      file:close()
+      print("Deleted successfully!")
+    end
+    ::change_quantity::do
+      print("Change it to?")
+      local change_qn_to = io.read()
+      if tonumber(change_qn_to) < 0 then print("Can't less then zero!") goto change_quantity
+      elseif tonumber(change_qn_to) <= cart_db[user_name][tostring(choice)][2] then 
+        print("Can't less than or equal to the original quantity.") 
+        goto change_quantity
+        
+      end
+    end
   end
 end
 function Setting (user_name)
@@ -496,4 +525,4 @@ function Check_out(user_name)
 end
 
 
-Manage_cart("a123")
+Manage_cart("GG_WPX")
