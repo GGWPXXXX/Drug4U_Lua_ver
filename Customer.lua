@@ -10,7 +10,12 @@ function Update(table, new_values)
 end
 
 function Register()
-
+  local username = nil
+  local customer_db = nil
+  local password = nil
+  local address = nil
+  local tel = nil
+  local new_acc = nil
   print('===============================')
   print('Hi this is registration form :)')
   print('===============================')

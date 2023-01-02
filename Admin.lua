@@ -124,5 +124,61 @@ function Add_new_product()
         file:close()
         
     end
+    ::add_another:: do
+        print("Do you want to add anything else?")
+        print("(y/n)")
+        local check = io.read()
+        if string.lower(check) ~= 'y' or string.lower(check) ~= 'n' then print("Wrong input!") time.sleep(1) goto add_another
+        elseif string.lower(check) == 'y' then goto main
+        else return
+        end
+    end 
 end
-Add_new_product()
+
+function Modify_product()
+    local category = nil
+    local wtd = nil
+    local category_dict = {}
+    local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'r')
+    local data = file:read("*all")
+    local med_db = json.decode(data)
+    file:close()
+    ::ask_modify_category::do
+        print('==================================')
+        print("Which category do you want to modify? ")
+        print('==================================')
+        local count = 1
+        for k, v in pairs(med_db) do
+            print(string.format("%s. %s", count, k ))
+            category_dict[tostring(count)] = k
+            count = count + 1
+        end
+        print("Please type-in category number:)")
+        category = io.read()
+
+        --- Check input. 
+        if not category_dict[category] then print("Wrong Choice!") time.sleep(1) goto ask_modify_category
+        end
+    end
+    ::ask_wtd::do
+        print('======================')
+        print('What do you want to do')
+        print('======================')
+        print('1. Check remaining stock')
+        print('2. Modify the product')
+        wtd = io.read()
+    end
+        --- Check input.
+        if wtd ~= '1' and wtd ~='2' then print("Wrong Choice!") time.sleep(1) goto ask_wtd
+        end
+
+        if wtd == '1' then
+            print("Which category?")
+            for k, v in pairs(med_db[category_dict[category]]) do
+                print(k, v)
+            end
+        end
+end
+
+
+Modify_product()
