@@ -1,6 +1,7 @@
 local lunajson = require("lunajson")
 local json = require("dkjson")
 local time = require("socket")
+local system = require("os")
 
 
 function Add_new_category ()
@@ -139,6 +140,7 @@ function Modify_product()
     local category = nil
     local wtd = nil
     local category_dict = {}
+    local product_dict = {}
     local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'r')
     local data = file:read("*all")
     local med_db = json.decode(data)
@@ -173,11 +175,48 @@ function Modify_product()
         end
 
         if wtd == '1' then
-            print("Which category?")
+            print("=========================")
+            print("Stock    Medcine Name")
+            print("=========================")
             for k, v in pairs(med_db[category_dict[category]]) do
-                print(k, v)
+                print(string.format(" %s       %s",  v["amount"], k))
             end
-        end
+            ::back:: do
+                print("Type 'menu' to go back to the main menu")
+                print("Type 'exit' to exit the program")
+                local menu = io.read()
+                if string.lower(menu) == 'menu' then goto ask_modify_category
+                elseif string.lower(menu) == 'exit' then system.exit()
+                else goto back
+                end
+            end
+    
+        else
+            ::which_product::do
+                print("=========================================================")
+                print("All products from the chosen cateory are the following ;)")
+                print("=========================================================")
+                local count = 1
+                for k, v in pairs(med_db[category_dict[category]]) do
+                    print(string.format("%s. %s", count, k))
+                    count = count + 1
+                end
+                print("")
+            end
+
+            ::what_to_modify::do
+                print("What do you want to modify?")
+                print("uses, side-effects, precautions, price, amount")
+                print("Please type in ;)")
+            end
+            local modify_this = io.read()
+            --- Check input
+            if string.lower(modify_this) ~= 'uses' and string.lower(modify_this) ~= 'side-effects' and
+            string.lower(modify_this) ~= 'precautions' and string.lower(modify_this) ~= 'price' and
+            string.lower(modify_this) ~= 'amount' then print("Wrong choice!") time.sleep(1) goto what_to_modify
+            end
+
+    end 
 end
 
 
