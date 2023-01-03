@@ -199,9 +199,18 @@ function Modify_product()
                 local count = 1
                 for k, v in pairs(med_db[category_dict[category]]) do
                     print(string.format("%s. %s", count, k))
+                    product_dict[tostring(count)] = k
                     count = count + 1
                 end
-                print("")
+                print("Please type-in product number")
+                local product_name = io.read()
+                local found = nil
+                for k, v in pairs(product_dict) do
+                    if product_name == k then found = true break else found = false
+                    end
+                end
+                if found == false then print("Wrong choice!") time.sleep(1) goto which_product
+                end
             end
 
             ::what_to_modify::do
