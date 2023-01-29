@@ -140,6 +140,7 @@ function Modify_product()
     local category = nil
     local wtd = nil
     local category_dict = {}
+    local changeTo = nil
     local product_dict = {}
     local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'r')
     local data = file:read("*all")
@@ -212,7 +213,7 @@ function Modify_product()
                 if found == false then print("Wrong choice!") time.sleep(1) goto which_product
                 end
             end
-
+        end
             ::what_to_modify::do
                 print("What do you want to modify?")
                 print("uses, side-effects, precautions, price, amount")
@@ -224,8 +225,13 @@ function Modify_product()
             string.lower(modify_this) ~= 'precautions' and string.lower(modify_this) ~= 'price' and
             string.lower(modify_this) ~= 'amount' then print("Wrong choice!") time.sleep(1) goto what_to_modify
             end
-
-    end 
+            print("Change to?")
+            changeTo = io.read()
+            while changeTo == nil or changeTo:match("%S") == nil do
+                print("Type something!")
+                changeTo = io.read()
+            end
+            
 end
 
 
