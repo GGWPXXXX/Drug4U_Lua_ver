@@ -142,6 +142,7 @@ function Modify_product()
     local category_dict = {}
     local changeTo = nil
     local product_dict = {}
+    local product_name = nil
     local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'r')
     local data = file:read("*all")
     local med_db = json.decode(data)
@@ -204,7 +205,7 @@ function Modify_product()
                     count = count + 1
                 end
                 print("Please type-in product number")
-                local product_name = io.read()
+                product_name = io.read()
                 local found = nil
                 for k, v in pairs(product_dict) do
                     if product_name == k then found = true break else found = false
@@ -220,7 +221,7 @@ function Modify_product()
                 print("Please type in ;)")
             end
             local modify_this = io.read()
-            --- Check input
+            --- Check input.
             if string.lower(modify_this) ~= 'uses' and string.lower(modify_this) ~= 'side-effects' and
             string.lower(modify_this) ~= 'precautions' and string.lower(modify_this) ~= 'price' and
             string.lower(modify_this) ~= 'amount' then print("Wrong choice!") time.sleep(1) goto what_to_modify
@@ -231,7 +232,15 @@ function Modify_product()
                 print("Type something!")
                 changeTo = io.read()
             end
-            
+            --- Write down new product information. 
+            if string.lower(modify_this) == "amount" or string.lower(modify_this) == "price" then
+                changeTo = tonumber(changeTo)
+            end
+            med_db[category_dict[category]][product_dict[product_name]][modify_this] = changeTo
+            local file = io.open("../Drug4U_Lua_ver/Medicine/Medicine_Data.json", 'w')
+            local data = json.encode(med_db, {indent=true})
+            file:write(data)
+            file:close()
 end
 
 
